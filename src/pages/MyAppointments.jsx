@@ -29,11 +29,14 @@ export default function MyAppointments() {
     }
   }
 
-  useEffect(() => { load() }, [user.id])
+  useEffect(() => {
+    if (!user?.id) return
+    load()
+  }, [user?.id])
 
   async function handleCancel(id) {
     if (!confirm('Cancel this appointment?')) return
-    await appointmentService.updateStatus(id, 'Cancelled')
+    await appointmentService.cancel(id)
     load()
   }
 

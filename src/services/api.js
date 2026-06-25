@@ -62,6 +62,7 @@ function normalizeUser(raw) {
 
 function normalizeDoctor(raw) {
   if (!raw) return null
+  const workingDays = raw.workingDays || raw.availability || []
   return {
     ...raw,
     id: raw.id || raw._id,
@@ -72,7 +73,10 @@ function normalizeDoctor(raw) {
     bio: raw.bio ?? raw.qualification ?? '',
     phone: raw.phone,
     email: raw.email,
-    availability: raw.availability ?? [],
+    availability: Array.isArray(workingDays) ? workingDays : [workingDays].filter(Boolean),
+    workingDays: Array.isArray(workingDays) ? workingDays : [workingDays].filter(Boolean),
+    startTime: raw.startTime || raw.start_time || '09:00 AM',
+    endTime: raw.endTime || raw.end_time || '05:00 PM',
     rating: raw.rating ?? 4.8,
     reviews: raw.reviews ?? 0,
   }
@@ -214,6 +218,10 @@ export const appointmentService = {
   updateStatus: async (id, status) => {
     const body = { status: toBackendStatus(status) }
     const res = await api.put(`/appointments/${id}/status`, body)
+    return normalizeAppointment(res.data.data)
+  },
+  cancel: async (id) => {
+    const res = await api.put(`/appointments/${id}/cancel`)
     return normalizeAppointment(res.data.data)
   },
 }

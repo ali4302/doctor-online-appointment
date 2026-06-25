@@ -13,11 +13,12 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!user?.id) return
     Promise.all([
       appointmentService.getByPatient(),
       notificationService.getByPatient(user.id),
     ]).then(([a, n]) => { setAppts(a); setNotifs(n); setLoading(false) })
-  }, [user.id])
+  }, [user?.id])
 
   const stats = [
     { label: 'Total Booked', value: appts.length, icon: Calendar, color: 'bg-teal-50 text-teal-700' },

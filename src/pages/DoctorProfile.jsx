@@ -61,10 +61,15 @@ export default function DoctorProfile() {
             <h3 className="font-semibold text-slate-800 mb-3">About</h3>
             <p className="text-slate-600 text-sm leading-relaxed">{doctor.bio}</p>
             <h3 className="font-semibold text-slate-800 mt-6 mb-3">Availability</h3>
-            <div className="flex flex-wrap gap-2">
-              {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d => (
-                <span key={d} className={`px-3 py-1.5 rounded-lg text-xs font-medium ${doctor.availability?.includes(d) ? 'bg-teal-100 text-teal-700' : 'bg-slate-100 text-slate-400'}`}>{d}</span>
-              ))}
+            <div className="flex flex-wrap gap-2 items-center">
+              {doctor.workingDays?.length ? doctor.workingDays.map((d) => (
+                <span key={d} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-teal-100 text-teal-700">{d}</span>
+              )) : (
+                <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 text-slate-400">No schedule available</span>
+              )}
+            </div>
+            <div className="mt-4 text-sm text-slate-600">
+              <p><span className="font-semibold">Time:</span> {doctor.startTime} - {doctor.endTime}</p>
             </div>
           </div>
           <div>

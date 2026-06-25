@@ -11,7 +11,13 @@ export default function PatientDashboard() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { appointmentService.getByPatient(user.id).then(a => { setAppointments(a); setLoading(false); }); }, []);
+  useEffect(() => {
+    if (!user?.id) return
+    appointmentService.getByPatient(user.id)
+      .then(a => { setAppointments(a) })
+      .catch((err) => { console.error(err) })
+      .finally(() => { setLoading(false) })
+  }, [user?.id])
 
   const counts = {
     total: appointments.length,
